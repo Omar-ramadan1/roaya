@@ -20,17 +20,11 @@ module.exports = {
         let name = "image" + id;
         console.log(name);
         var busboy = Busboy({ headers: req.headers });
-        // var WR = fs.createWriteStream(__dirname + '/' + name + '.png');
         busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
             let upload = cloudinary.uploader.upload_stream({ public_id: name, folder: "roaya/test" }, (err, result) => {
                 console.log(err, result);
                 res.end(result["secure_url"]);
             })
-            // let upload = cloudinary.uploader.upload_stream({ public_id: name, folder: "ProfilePic" }, (err, result) => {
-            //   console.log(err, result);
-            //   res.end(JSON.stringify(result));
-            // })
-
             file.pipe(upload);
         });
         req.pipe(busboy);
