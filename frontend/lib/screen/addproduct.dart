@@ -23,14 +23,21 @@ class _AddProductsState extends State<AddProducts> {
   final TextEditingController decsriptionController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final CommonFunctions commonFunctions = CommonFunctions();
-  String? _image , _imageURL;
+  String? _imagePath , _imageURL;
+  // Post user data to server
   void postDateProfile() async {
-    http.Response postProductResponse;
+    // upload image data first to the server and then the server
+    // return a  url of the image which is saved on cloudinary
     http.StreamedResponse imageUploadResponse =
-        await commonFunctions.uploadAssetImages(_image!);
+        await commonFunctions.uploadAssetImages(_imagePath!);
+
+    // here we then react to the response coming from the server with is the image url
+    // to be able to call the image when we need
+
     imageUploadResponse.stream.transform(utf8.decoder).listen((imageURL) async {
-      postProductResponse =
-          await http.post(Uri.parse('${serverURL}products'), body: {
+      // the time have come to send the user data with the image url as image url part of user data
+      // after that we can call the image by image url as much as we want as long as we have the Map which have the user data
+      http.Response postProductResponse = await http.post(Uri.parse('${serverURL}products'), body: {
         "name": "khaled",
         "price": "30",
         "desc": "desc",
@@ -38,11 +45,9 @@ class _AddProductsState extends State<AddProducts> {
         "imageURL": imageURL
       });
       Map postProductResponseBody =  jsonDecode(postProductResponse.body);
-      print(postProductResponseBody["imageURL"]);
       setState(() {
         _imageURL = postProductResponseBody["imageURL"];
       });
-      print(_imageURL);
     });
   }
 
@@ -52,7 +57,7 @@ class _AddProductsState extends State<AddProducts> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     setState(() {
-      _image = image?.path;
+      _imagePath = image?.path;
     });
   }
 
@@ -106,9 +111,9 @@ class _AddProductsState extends State<AddProducts> {
               SizedBox(
                 width: 200,
                 height: 130,
-                child: _image == null
+                child: _imagePath == null
                     ? const Text("data")
-                    : Image.file(File(_image!)),
+                    : Image.file(File(_imagePath!)),
               ),
               SizedBox(
                 width: 200,
