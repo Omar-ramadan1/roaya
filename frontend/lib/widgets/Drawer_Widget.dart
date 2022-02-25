@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:roaya/screen/addproduct.dart';
+import 'package:roaya/screen/getallproductscreen.dart';
+import 'package:roaya/screen/postsscreen.dart';
 
+import '../models/userdata.dart';
 import 'Inkwell.dart';
 
 class Drawer_Widget extends StatefulWidget {
@@ -19,7 +23,7 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
     
     Drawer(
       backgroundColor: Colors.amber,
-      child: Column(
+      child: ListView(
         children: <Widget>[
          
        
@@ -31,41 +35,42 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
               children: [
                 Container(
                       margin: EdgeInsets.only(top: 50,bottom: 120),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFBD954F),
-                        borderRadius: BorderRadius.all(Radius.circular(60)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.6),
-                            spreadRadius: 3,
-                            blurRadius: 9,
-                            offset: Offset(0, 3), // changes position of shadow
+                      
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: MediaQuery.of(context).size.width / 9,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person,size: 40,
+                              color: Color(0xFFBD954F),
+                            ),
                           ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("${context.read<UserData>().userData?['email']}",
+                                style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white) 
+                                
+                                ,),
+                                
+                              ],
+                            ),
+                          ),Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("${context.read<UserData>().userData?['name']}",
+                                style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white) 
+                                
+                                ,),
+                                
+                              ],
+                            ),
                         ],
                       ),
-                      child: CircleAvatar(
-                        radius: MediaQuery.of(context).size.width / 9,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.person,size: 40,
-                          color: Color(0xFFBD954F),
-                        ),
-                      ),
                     ),
-                   // SizedBox(height: 40,),
-
-                // Container(
-                //   margin: EdgeInsets.only(top: 50),
-                //  // height: 150,
-                //     child: CircleAvatar(
-                      
-                //       backgroundColor: Colors.white,
-                //       child: Icon(Icons.person),
-                //     ),
-
-                // ),
-
-
                 InkWell(
                   onTap: (){},
                   child:ListTile(
@@ -73,47 +78,58 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
                     leading: Icon(Icons.home,size: 30,color: Colors.white,),
                   )
                 ),
-                InkWell(
+                 InkWell(
                   onTap: (){
-                           Navigator.push(
+                      Navigator.push(
                     context,
                     new MaterialPageRoute(
-                      builder: (context) => AddProducts(),
+                      builder: (context) => GetProduct(),
                     ),
                   );
                   },
-                  child:ListTile(
-                    title: Text("ShopingCart",style: TextStyle(fontSize: 25,color: Colors.white),),
-                    leading: Icon(Icons.add_shopping_cart,size: 30,color: Colors.white,),
-                  )
-                ),
-                     
-               
-                 InkWell(
-                  onTap: (){},
                   child:ListTile(
                     title: Text("My account",style: TextStyle(fontSize: 25,color: Colors.white),),
                     leading: Icon(Icons.person,size: 30,color: Colors.white,),
                   )
                 ),
-                  InkWell(
-                  onTap: (){},
+                 InkWell(
+                  onTap: (){
+                      Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => PostsScreen(),
+                    ),
+                  );
+                  },
+                  
                   child:ListTile(
-                    title: Text("Favourites",style: TextStyle(fontSize: 25,color: Colors.white),),
-                    leading: Icon(Icons.favorite,size: 30,color: Colors.white,),
+                    title: Text("AddCourse",style: TextStyle(fontSize: 25,color: Colors.white),),
+                    leading: Icon(Icons.add_shopping_cart,size: 30,color: Colors.white,),
+                  )
+                ),
+                     
+               
+                
+               
+              
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => PostsScreen(),
+                    ),
+                  );
+                  },
+                  child:ListTile(
+                    title: Text("Posts",style: TextStyle(fontSize: 25,color: Colors.white),),
+                    leading: Icon(Icons.settings,size: 30,color: Colors.white,),
                   )
                 ),
                 InkWell(
                   onTap: (){},
                   child:ListTile(
-                    title: Text("Contact",style: TextStyle(fontSize: 25,color: Colors.white),),
-                    leading: Icon(Icons.call,size: 30,color: Colors.white,),
-                  )
-                ),
-                InkWell(
-                  onTap: (){},
-                  child:ListTile(
-                    title: Text("Setting",style: TextStyle(fontSize: 25,color: Colors.white),),
+                    title: Text("privacy&term",style: TextStyle(fontSize: 25,color: Colors.white),),
                     leading: Icon(Icons.settings,size: 30,color: Colors.white,),
                   )
                 ),

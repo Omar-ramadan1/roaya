@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roaya/constant/constant.dart';
 import 'package:roaya/logic/CommonFunctions.dart';
+import 'package:roaya/screen/getallproductscreen.dart';
+import 'package:roaya/screen/homepage.dart';
 import 'package:roaya/widgets/Appbar_widget.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +25,7 @@ class _AddProductsState extends State<AddProducts> {
   final TextEditingController decsriptionController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
   final CommonFunctions commonFunctions = CommonFunctions();
-  String? _imagePath , _imageURL;
+  String? _imagePath, _imageURL;
   // Post user data to server
   void postDateProfile() async {
     // upload image data first to the server and then the server
@@ -37,14 +39,14 @@ class _AddProductsState extends State<AddProducts> {
     imageUploadResponse.stream.transform(utf8.decoder).listen((imageURL) async {
       // the time have come to send the user data with the image url as image url part of user data
       // after that we can call the image by image url as much as we want as long as we have the Map which have the user data
-      http.Response postProductResponse = await http.post(Uri.parse('${serverURL}products'), body: {
-        "name": "khaled",
-        "price": "30",
-        "desc": "desc",
-        "quantity": "20",
+      http.Response postProductResponse =
+          await http.post(Uri.parse('${serverURL}products'), body: {
+        "name": nameController.text,
+        "price": PriceController.text,
+        "desc": decsriptionController.text,
         "imageURL": imageURL
       });
-      Map postProductResponseBody =  jsonDecode(postProductResponse.body);
+      Map postProductResponseBody = jsonDecode(postProductResponse.body);
       setState(() {
         _imageURL = postProductResponseBody["imageURL"];
       });
@@ -72,55 +74,45 @@ class _AddProductsState extends State<AddProducts> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: "namOfProduct"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter  name of product';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(labelText: "namOfCourse"),
                 textInputAction: TextInputAction.next,
               ),
               TextFormField(
                 controller: PriceController,
-                decoration: const InputDecoration(labelText: "priceOfProduct"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter price of product';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(labelText: "priceOfCourse"),
                 textInputAction: TextInputAction.next,
               ),
               TextFormField(
                 controller: decsriptionController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter desc of product';
+                  }
+                  return null;
+                },
                 decoration: const InputDecoration(labelText: "description"),
                 textInputAction: TextInputAction.next,
               ),
-              TextFormField(
-                controller: quantityController,
-                decoration: const InputDecoration(labelText: "quantity"),
-                textInputAction: TextInputAction.next,
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 50, right: 20, left: 40),
-                width: double.infinity,
-                child: RaisedButton(
-                  onPressed: () {
-                    //getImage();
-                    postDateProfile();
-                  },
-                  color: Colors.amber,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text(
-                      "Upload",
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
+           
+
               SizedBox(
                 width: 200,
                 height: 130,
                 child: _imagePath == null
-                    ? const Text("data")
+                    ?  Container()
                     : Image.file(File(_imagePath!)),
-              ),
-              SizedBox(
-                width: 200,
-                height: 130,
-                child: _imageURL == null
-                    ? const Text("_imageURL")
-                    : Image.network(_imageURL!),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 50, right: 20, left: 40),
@@ -134,6 +126,30 @@ class _AddProductsState extends State<AddProducts> {
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                     child: Text(
                       "PickImage",
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 50, right: 20, left: 40),
+                width: double.infinity,
+                child: RaisedButton(
+                  onPressed: () {
+                    //getImage();
+                    postDateProfile();
+                       Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    ),
+                  );
+                  },
+                  color: Colors.amber,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      "Upload",
                       style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   ),

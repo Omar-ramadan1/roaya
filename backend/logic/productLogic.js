@@ -10,8 +10,8 @@ module.exports = {
                     name: res.name,
                     price: res.price,
                     desc: res.desc,
-                    quantity: res.quantity,
-                    imageURL: product.imageURL
+                    imageURL: res.imageURL,
+                    
                 }
             })
         })
@@ -21,7 +21,7 @@ module.exports = {
             name: req.body.name,
             price: req.body.price,
             desc: req.body.desc,
-            quantity: req.body.quantity,
+        //    quantity: req.body.quantity,
             imageURL: req.body.imageURL
         }).save()
         res.json({
@@ -30,7 +30,7 @@ module.exports = {
             name: product.name,
             price: product.price,
             desc: product.desc,
-            quantity: product.quantity,
+         //   quantity: product.quantity,
             imageURL: product.imageURL
         })
 

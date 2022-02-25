@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 const productRoute = require('./route/ProductRoute');
 const imageRoute = require('./route/ImageRoute');
+const AuthRouter = require('./route/authRoute');
 
 const port = 3000;
 
@@ -23,8 +24,11 @@ connection.on('connected', () => { console.log("connect with cloud") });
 connection.on('error', () => { console.log("error with database") });
 app.use([bodyParser.urlencoded({ extended: true }), express.json(), express.urlencoded({ extended: true })]);
 app.use(cors());
+app.use('/auth', AuthRouter);
+
 app.use('/products', productRoute);
 app.use('/image', imageRoute);
+
 
 
 app.listen(port, () => {

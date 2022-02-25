@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:roaya/models/userdata.dart';
+import 'package:roaya/screen/details_screen.dart';
 import 'package:roaya/screen/loginscreen.dart';
 import 'package:roaya/screen/splashscreen.dart';
 
 
 void main() {
-  runApp(const MyApp());
+   runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserData()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,6 +29,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home:  SplashScreen(),
+      routes: 
+      {
+        CharacterDetailsScreen.roteName:(ctx)=> CharacterDetailsScreen()
+      },
     );
   }
 }

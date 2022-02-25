@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roaya/screen/details_screen.dart';
 import 'package:roaya/widgets/Appbar_widget.dart';
 import 'package:roaya/widgets/BottomBarWidget.dart';
 import 'package:roaya/widgets/Drawer_Widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+
+import '../constant/constant.dart';
+import '../models/userdata.dart';
+import '../widgets/home_details.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,222 +22,297 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var imagess = [
-    "assets/images/lab1.png",
-    "assets/images/lab2.png",
-    "assets/images/lab3.png",
-    "assets/images/lab4.png",
-  ];
-  var offers = [
-    "assets/images/lab1.png",
-    "assets/images/lab2.png",
-    "assets/images/lab3.png",
-    "assets/images/lab4.png",
-  ];
+  List productsList = [];
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
 
-  final List<String> list = [
-    "assets/images/lab1.png",
-    "assets/images/lab2.png",
-    "assets/images/lab3.png",
-    "assets/images/lab4.png",
-  ];
-  final controller = PageController(viewportFraction: 0.8, keepPage: true);
-  List<T> map<T>(List list, Function handler) {
-    List<T> result = [];
-    for (var i = 0; i < list.length; i++) {
-      result.add(handler(i, list[i]));
+
+  getProduct() async {
+    var url = Uri.parse('${serverURL}products');
+    var res = await http.get(url);
+    if (res.statusCode == 200) {
+      var jsonObj = json.decode(res.body);
+      setState(() {
+        productsList = jsonObj['result'];
+      });
+      print(productsList);
     }
-    return result;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProduct();
+       // context.read<UserData>().getUserData();
+
   }
 
   int activeIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar_widget("Home"),
+        key: _scaffoldState,
+
+   //   appBar: Appbar_widget("Home"),
+  //  appBar: AppBar(
+  //    backgroundColor: Colors.amber,
+  //       elevation: 0.0,
+  //  ),
       drawer: Drawer_Widget(),
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: Text(
-                      "Offers",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Center(
-                child: CarouselSlider.builder(
-                  options: CarouselOptions(
-                      height: 200,
-                      autoPlay: true,
-                      autoPlayInterval: Duration(seconds: 2),
-                      enlargeCenterPage: true,
-                      onPageChanged: (index, reason) =>
-                          setState(() => activeIndex = index)),
-                  itemCount: imagess.length,
-                  itemBuilder: (context, index, realindex) {
-                    final images = imagess[index];
-                    return buildImage(images, index);
-                  },
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    child: Text(
-                      "Categories",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-            Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height / 3.2,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+      body:Stack(
+        children: [
+          background(),
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width / 1,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.brown),
-                      color: Colors.amber,
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    width: MediaQuery.of(context).size.width / 1,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.brown),
-
-                      color: Colors.red,
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    width: MediaQuery.of(context).size.width / 1,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.brown),
-
-                      color: Colors.amber,
-                    ),
-                  ),
+                  header(),
+                  search(),
+                 
+                  SizedBox(height: 16),
+                  titleList('Course ', () {}),
+                
+                    for (int i = 0; i < productsList.length; i++)
+                        HomeDetails(productsList[i])
+                  
                 ],
               ),
             ),
-            
-
-             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Our Products",
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    )),
-              ],
-            ),
-            GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 2 / 3,
-                crossAxisSpacing: 1,
-                mainAxisSpacing: 1,
-                
-              ),
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: 6,
-              itemBuilder: (ctx, index) {
-                return InkWell(
-                  onTap: (){
-                        Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (context) => CharacterDetailsScreen(),
-                    ),
-                  );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                    padding: EdgeInsetsDirectional.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.brown,
-                      borderRadius: BorderRadius.circular(8),
-                      
-                    ),
-                    child: GridTile(child: Container(
-                      color: Colors.amber,
-                    ),),
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+          ),
+        ],
       ),
-      bottomNavigationBar: BottomBarWidget(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          //    FlutterPhoneDirectCaller.callNumber(number)
-          // Utils.openPhoneCall("01091366579");
-        },
-        child: Icon(Icons.phone),
+      //  Container(
+      //   color: Colors.white,
+      //   child: ListView(
+      //     children: [
+      //       Center(
+      //         child: Text(
+      //           "Courses",
+      //           style:
+      //               TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      //         ),
+      //       ),
+      //       SizedBox(
+      //         height: 5,
+      //       ),
+      //       for (int i = 0; i < productsList.length; i++)
+      //        HomeDetails(productsList[i])
+      //     ],
+      //   ),
+      // ),
+   //   bottomNavigationBar: BottomBarWidget(),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.amber,
+      //   onPressed: () {
+      //     //    FlutterPhoneDirectCaller.callNumber(number)
+      //     // Utils.openPhoneCall("01091366579");
+      //   },
+      //   child: Icon(Icons.phone),
+      // ),
+    );
+  }
+    Widget background() {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50),
+          bottomRight: Radius.circular(50),
+        ),
       ),
     );
   }
-//  _launchURL() async {
-//     SimplePermissions.requestPermission(Permission.CallPhone)
-//         .then((state) async {
-//       if (state == PermissionStatus.authorized) {
-//         String a = Uri.encodeFull("#");
-//         String url = 'tel:*123' + a;
-//         if (await canLaunch(url)) {
-//           await launch(url);
-//         } else {
-//           throw 'Could not launch $url';
-//         }
-//       }
-//     });}
-  // _callNumber() async {
-  //   //launch("tel://$number");
-  //   const number = '08592119XXXX'; //set the number here
-  //   bool? res = await FlutterPhoneDirectCaller.callNumber(number);
-  // }
-
-  Widget buildImage(String image, int index) => Container(
-        height: MediaQuery.of(context).size.height / 3,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.amber,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.brown),
-
-          // image: DecorationImage(
-          //   fit: BoxFit.fill,
-          //   image: AssetImage(image),
+    Widget header() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+           IconButton(
+          icon: Icon(Icons.menu,
+              color: Colors.white,
+              size: 40),
+          onPressed: (){
+            _scaffoldState.currentState?.openDrawer();
+          },),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Hello,',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 20,
+                  ),
+                ),
+                Text(
+                  context.read<UserData>().userData?['name'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(50),
+          //   child: Image.asset(
+          //     Assets.imageAvatar,
+          //     width: 50,
+          //     height: 50,
+          //     fit: BoxFit.cover,
+          //   ),
           // )
-        ),
-      );
+        ],
+      ),
+    );
+  }
+Widget search() {
+    return Container(
+      margin: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search on course',
+                border: InputBorder.none,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.indigo[900],
+                ),
+                isDense: true,
+                contentPadding: EdgeInsets.all(0),
+              ),
+              textAlignVertical: TextAlignVertical.center,
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 30,
+            color: Colors.indigo[900],
+          ),
+          IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.indigo[900],
+                size: 30,
+              ),
+              onPressed: () {}),
+        ],
+      ),
+    );
+  }
+   Widget titleList(String title, Function function) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          GestureDetector(
+            child: Icon(Icons.navigate_next),
+            onTap: () => function,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget listOnProgress() {
+    return ListView.builder(
+      itemCount: 2,
+      shrinkWrap: true,
+      padding: EdgeInsets.all(16),
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+       // Course course = Assets.courses[index];
+        return Container(
+          margin: EdgeInsets.fromLTRB(
+            0,
+            index == 0 ? 0 : 8,
+            0,
+            index == 1 ? 0 : 8,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.indigo[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              
+              children: [
+                   for (int i = 0; i < productsList.length; i++)
+      //        HomeDetails(productsList[i])
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    productsList[i]['imageURL'],
+                    fit: BoxFit.fill,
+                    height: 60,
+                    width: 60,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                       // productsList[i]['imageURL'],
+                       "",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                       "",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 16),
+                Material(
+                  borderRadius: BorderRadius.circular(100),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () {},
+                    child: Padding(
+                      padding: EdgeInsets.all(4),
+                      // child: Icon(
+                      //   Icons.play_arrow_rounded,
+                      //   size: 40,
+                      //   color: Colors.indigo[900],
+                      // ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

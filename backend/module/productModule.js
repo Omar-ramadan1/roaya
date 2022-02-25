@@ -5,7 +5,6 @@ module.exports =
         name: String,
         price: Number,
         desc: String,
-        quantity: Number,
         imageURL: String,
     })
 
