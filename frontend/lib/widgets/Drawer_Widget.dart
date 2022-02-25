@@ -97,7 +97,7 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
                       Navigator.push(
                     context,
                     new MaterialPageRoute(
-                      builder: (context) => PostsScreen(),
+                      builder: (context) => AddProducts(),
                     ),
                   );
                   },

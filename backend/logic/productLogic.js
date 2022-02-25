@@ -11,7 +11,8 @@ module.exports = {
                     price: res.price,
                     desc: res.desc,
                     imageURL: res.imageURL,
-                    
+                    teacherId: res.teacherId,
+
                 }
             })
         })
@@ -21,8 +22,9 @@ module.exports = {
             name: req.body.name,
             price: req.body.price,
             desc: req.body.desc,
-        //    quantity: req.body.quantity,
-            imageURL: req.body.imageURL
+            //    quantity: req.body.quantity,
+            imageURL: req.body.imageURL,
+            teacherId: req.body.teacherId
         }).save()
         res.json({
             "message": "inserted successfully",
@@ -30,8 +32,9 @@ module.exports = {
             name: product.name,
             price: product.price,
             desc: product.desc,
-         //   quantity: product.quantity,
-            imageURL: product.imageURL
+            //   quantity: product.quantity,
+            imageURL: product.imageURL,
+            teacherId: product.imageURL
         })
 
     },

@@ -3,12 +3,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:roaya/constant/constant.dart';
 import 'package:roaya/logic/CommonFunctions.dart';
 import 'package:roaya/screen/getallproductscreen.dart';
 import 'package:roaya/screen/homepage.dart';
 import 'package:roaya/widgets/Appbar_widget.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/userdata.dart';
 
 class AddProducts extends StatefulWidget {
   @override
@@ -39,12 +42,14 @@ class _AddProductsState extends State<AddProducts> {
     imageUploadResponse.stream.transform(utf8.decoder).listen((imageURL) async {
       // the time have come to send the user data with the image url as image url part of user data
       // after that we can call the image by image url as much as we want as long as we have the Map which have the user data
+      print(context.read<UserData>().userData?['_id']);
       http.Response postProductResponse =
           await http.post(Uri.parse('${serverURL}products'), body: {
         "name": nameController.text,
         "price": PriceController.text,
         "desc": decsriptionController.text,
-        "imageURL": imageURL
+        "imageURL": imageURL,
+        "teacherId":context.read<UserData>().userData?['_id']
       });
       Map postProductResponseBody = jsonDecode(postProductResponse.body);
       setState(() {
@@ -138,12 +143,7 @@ class _AddProductsState extends State<AddProducts> {
                   onPressed: () {
                     //getImage();
                     postDateProfile();
-                       Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (context) => HomePage(),
-                    ),
-                  );
+
                   },
                   color: Colors.amber,
                   child: const Padding(

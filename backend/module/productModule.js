@@ -6,6 +6,7 @@ module.exports =
         price: Number,
         desc: String,
         imageURL: String,
+        teacherId: String
     })
 
 module.exports = mongoose.model('PRODUCTS', products);

@@ -25,8 +25,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
         Uri.parse(
             '${serverURL}auth/signup/${context.read<UserData>().userData?['_id']}'),
         body: {
-          "budget":
-              "${context.read<UserData>().userData?['budget'] - ProductInfo["price"]}"
+          "ProductInfo": jsonEncode(ProductInfo)
         });
     print(response.body);
     Map jsonBody = jsonDecode(response.body);
