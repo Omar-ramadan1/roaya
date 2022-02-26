@@ -94,7 +94,7 @@ class _GetProductState extends State<GetProduct> {
               ),
               Spacer(),
               Text(
-                "${context.read<UserData>().userData?['budget']}",
+                "${context.read<UserData>().userData?['budget']}\$",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               )
             ],

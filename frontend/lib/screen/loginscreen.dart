@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roaya/constant/constant.dart';
@@ -28,8 +27,12 @@ class _LoginPageState extends State<LoginPage> {
     });
     Map jsonBody = jsonDecode(response.body);
     if (jsonBody["isFound"]) {
-      Map userData = jsonBody["user"];
-      context.read<UserData>().userData = userData;
+      Map userDataa = jsonBody["user"];
+                context.read<UserData>().setUserDataFunc(userDataa);
+
+      context.read<UserData>().userData = userDataa;
+
+      print(context.read<UserData>().userData);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -42,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
 
-    //context.read<UserData>().setUserDataFunc(userData);
     print(response.body);
     //  if(response.body == "")
     return response;
@@ -56,6 +58,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     secureScreen();
     super.initState();
+            context.read<UserData>().userData == null ? print("null") : print("objectdddddd");
+
   }
 
   //  @override
@@ -69,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.amber,
       body: Form(
         key: _formKey,
-        child: Column(
+        child: ListView(
           children: [
             SizedBox(
               height: 30,

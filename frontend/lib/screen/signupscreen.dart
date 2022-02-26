@@ -39,17 +39,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       "type": value,
       "budget":"100"
     });
-    Map jsonBody = jsonDecode(response.body);
-    Map userData = {
-      "id": jsonBody["id"],
-      "email": jsonBody["email"],
-      "name":jsonBody["name"],
-      "password": jsonBody["password"],
-      "type":jsonBody["type"],
-      "budget":jsonBody["budget"]
+    // Map jsonBody = jsonDecode(response.body);
+    // Map userData = {
+    //   "id": jsonBody["id"],
+    //   "email": jsonBody["email"],
+    //   "name":jsonBody["name"],
+    //   "password": jsonBody["password"],
+    //   "type":jsonBody["type"],
+    //   "budget":jsonBody["budget"]
 
-    };
-    context.read<UserData>().setUserDataFunc(userData);
+    // };
+    // context.read<UserData>().setUserDataFunc(userData);
   }
 
   @override
@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.amber,
       body: Form(
         key: _formKey,
-        child: Column(
+        child: ListView(
           children: [
             SizedBox(
               height: 30,
@@ -91,6 +91,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       TextFormField(
                         controller: _emailcontroller,
+                        validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
                         decoration: InputDecoration(
                           hintText: "Enter your email",
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -108,6 +117,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       TextFormField(
                         controller: _namecontroller,
+                         validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           hintText: "Enter your name",
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -148,6 +163,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       TextFormField(
                         controller: _passwordcontroller,
+                         validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           hintText: "Enter your passworld",
                           hintStyle: const TextStyle(color: Colors.grey),

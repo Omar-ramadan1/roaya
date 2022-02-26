@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roaya/constant/constant.dart';
+import 'package:roaya/screen/congra.dart';
 
 import '../models/userdata.dart';
 import 'package:http/http.dart' as http;
@@ -24,9 +25,7 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
     var response = await http.put(
         Uri.parse(
             '${serverURL}auth/signup/${context.read<UserData>().userData?['_id']}'),
-        body: {
-          "ProductInfo": jsonEncode(ProductInfo)
-        });
+        body: {"ProductInfo": jsonEncode(ProductInfo)});
     print(response.body);
     Map jsonBody = jsonDecode(response.body);
     Map userData = jsonBody;
@@ -45,6 +44,13 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
     setState(() {
       ProductInfo = jsonDecode(offerInfoString);
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("ffff${context.read<UserData>().userData}");
+    context.read<UserData>().userData == null ? print("null") : print("objectdddddd");
   }
 
   Widget characterInfo(String title, String value) {
@@ -214,8 +220,12 @@ class _CharacterDetailsScreenState extends State<CharacterDetailsScreen> {
                               updateDateProfile();
                               //print("${context.read<UserData>().userData?['budget'] - ProductInfo["price"]}");
 
-                              Navigator.pop(context);
-                            },
+Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => Congra(),
+                    ),
+                  );                            },
                             child: Text("yes")),
                       ],
                     );

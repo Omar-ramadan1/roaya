@@ -22,7 +22,7 @@ class HomeDetails extends StatelessWidget {
                 border: Border.all(color: Colors.brown),
                 color: Colors.red,
                 image: DecorationImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: Image.network(productInfo["imageURL"]).image,
                 )),
           ),

@@ -1,1 +1,2 @@
-String serverURL = "http://192.168.1.7:3000/";
+//String serverURL = "http://192.168.1.4:3000/";
+String serverURL = "https://pixelap.herokuapp.com/";

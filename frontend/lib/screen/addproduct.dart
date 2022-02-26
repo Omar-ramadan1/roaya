@@ -143,6 +143,12 @@ class _AddProductsState extends State<AddProducts> {
                   onPressed: () {
                     //getImage();
                     postDateProfile();
+                    Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => HomePage(),
+                    ),
+                  );
 
                   },
                   color: Colors.amber,

@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:roaya/screen/addproduct.dart';
 import 'package:roaya/screen/getallproductscreen.dart';
+import 'package:roaya/screen/loginscreen.dart';
 import 'package:roaya/screen/postsscreen.dart';
 
 import '../models/userdata.dart';
@@ -34,8 +35,7 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
             child: Column(
               children: [
                 Container(
-                      margin: EdgeInsets.only(top: 50,bottom: 120),
-                      
+                      margin: EdgeInsets.only(top: 50,bottom: 120),                      
                       child: Column(
                         children: [
                           CircleAvatar(
@@ -49,7 +49,7 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
                           Container(
                             margin: EdgeInsets.only(top: 20),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("${context.read<UserData>().userData?['email']}",
                                 style:TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white) 
@@ -126,18 +126,26 @@ class _Drawer_WidgetState extends State<Drawer_Widget> {
                     leading: Icon(Icons.settings,size: 30,color: Colors.white,),
                   )
                 ),
-                InkWell(
-                  onTap: (){},
-                  child:ListTile(
-                    title: Text("privacy&term",style: TextStyle(fontSize: 25,color: Colors.white),),
-                    leading: Icon(Icons.settings,size: 30,color: Colors.white,),
-                  )
-                ),
+                
                   InkWell(
                   onTap: (){},
                   child:ListTile(
                     title: Text("About",style: TextStyle(fontSize: 25,color: Colors.white),),
                     leading: Icon(Icons.help,size: 30,color: Colors.white,),
+                  )
+                ),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ),
+                  );
+                  },
+                  child:ListTile(
+                    title: Text("Logout",style: TextStyle(fontSize: 25,color: Colors.white),),
+                    leading: Icon(Icons.logout,size: 30,color: Colors.white,),
                   )
                 ),
           

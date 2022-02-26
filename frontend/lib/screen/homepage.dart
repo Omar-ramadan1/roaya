@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                   search(),
                  
                   SizedBox(height: 16),
-                  titleList('Course ', () {}),
+                  titleList('Courses ', () {}),
                 
                     for (int i = 0; i < productsList.length; i++)
                         HomeDetails(productsList[i])

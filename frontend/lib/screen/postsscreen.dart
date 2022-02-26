@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:roaya/widgets/Appbar_widget.dart';
 
 class PostsScreen extends StatefulWidget {
   static const roteName = '/postsscreen';
@@ -35,11 +36,25 @@ class _PostsScreenState extends State<PostsScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: Appbar_widget("Posts"),
        body: ListView(children: [
     for (int i = 0; i < productsList.length; i++)
 
-         Text("${productsList[i]["title"]}")
+        
+         Row(
+           children: [
+             Text("date is: ${productsList[i]["pubDate"]}"),
+           ],
+         ),
+             for (int i = 0; i < productsList.length; i++)
+
+          Row(
+           children: [
+             Text("language is ${productsList[i]["language"]}"),
+           ],
+         ),
+
+         
        ],),
     );
   }
